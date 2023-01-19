@@ -1,0 +1,7 @@
+numpy==1.23.1
+pandas
+pillow
+matplotlib
+opencv-python
+scipy
+sourcedefender
