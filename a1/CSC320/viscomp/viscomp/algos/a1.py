@@ -85,7 +85,32 @@ def calculate_homography(source, destination):
     ################################
     ####### PUT YOUR CODE HERE #####
     ################################
-    homography = np.eye(3)
+    # p source
+    # p' destination
+    # homography = np.eye(3)
+
+    x1, x2, x3, x4 = source[0, 0], source[1, 0], source[2, 0], source[3, 0]
+    y1, y2, y3, y4 = source[0, 1], source[1, 1], source[2, 1], source[3, 1]
+
+    xp1, xp2, xp3, xp4 = destination[0, 0], destination[1, 0], destination[2, 0], destination[3, 0]
+    yp1, ypp2, yp3, yp4 = destination[0, 1], destination[1, 1], destination[2, 1], destination[3, 1]
+
+    # Flatten vector equation into form of Ax = b
+    A = np.array([
+        [x1, y1, 1, 0, 0, 0, -x1*xp1, -y1*xp1, -xp1],
+        [0, 0, 0, x1, y1, 1, -x1*yp1, -y1*yp1, -yp1],
+        [x2, y2, 1, 0, 0, 0, -x2*xp2, -y2*xp2, -xp2],
+        [0, 0, 0, x2, y2, 1, -x2*ypp2, -y2*ypp2, -ypp2],
+        [x3, y3, 1, 0, 0, 0, -x3*xp3, -y3*xp3, -xp3],
+        [0, 0, 0, x3, y3, 1, -x3*yp3, -y3*yp3, -yp3],
+        [x4, y4, 1, 0, 0, 0, -x4*xp4, -y4*xp4, -xp4],
+        [0, 0, 0, x4, y4, 1, -x4*yp4, -y4*yp4, -yp4],
+        [0, 0, 0, 0, 0, 0, 0, 0, 1]
+    ])
+
+    b = np.array([0, 0, 0, 0, 0, 0, 0, 0, 1])
+
+    homography = np.solve(A, b).reshape(3, 3)
     #################################
     ######### DO NOT MODIFY #########
     #################################
