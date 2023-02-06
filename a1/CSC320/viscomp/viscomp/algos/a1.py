@@ -91,6 +91,14 @@ def calculate_homography(source, destination):
     # p source
     # p' destination
 
+    # source = H dest
+#    x1, x2, x3, x4 = source[0, 0], source[1, 0], source[2, 0], source[3, 0]
+#    y1, y2, y3, y4 = source[0, 1], source[1, 1], source[2, 1], source[3, 1]
+#
+#    xp1, xp2, xp3, xp4 = destination[0, 0], destination[1, 0], destination[2, 0], destination[3, 0]
+#    yp1, yp2, yp3, yp4 = destination[0, 1], destination[1, 1], destination[2, 1], destination[3, 1]
+
+#    source = H @ dest
     xp1, xp2, xp3, xp4 = source[0, 0], source[1, 0], source[2, 0], source[3, 0]
     yp1, yp2, yp3, yp4 = source[0, 1], source[1, 1], source[2, 1], source[3, 1]
 
@@ -153,6 +161,8 @@ def backward_mapping(transform, source_image, destination_image, destination_coo
     ################################
     ####### PUT YOUR CODE HERE #####
     ################################
+    contained = convex_polygon(destination_coords, xs)
+    hs, ws, _ = source_image.shape
 
     # One way you can implement this is with a double for loop, like the following.
     # You DO NOT necessarily need to implement it in this way... you can implement
@@ -161,25 +171,28 @@ def backward_mapping(transform, source_image, destination_image, destination_coo
     # code is simpler and less lines of code than the double for loop version.
     # That being said if you still don't find vectorization natural, go ahead and attempt
     # the double for loop solution!
-    for r_prime in range(h):
+    for r in range(h):
         # The double for loop is slow, so we implement a progress bar.a
         # tqdm (a progress bar library) doesn't work great with certain GUI libraries, 
         # so we implment our own progress bar here.
         # you should ignore this code for the most part.
         sys.stdout.write('\x1b[1A')
         sys.stdout.write('\x1b[2K')
-        percent_done = float(r_prime)/float(h-1)
+        percent_done = float(r)/float(h-1)
         print(f"[{'#' * int(percent_done*30)}{'-' * (30-int(percent_done*30))}] {int(100*percent_done)}% done")
         
-        for c_prime in range(w):
-            x_prime, y_prime = xs[r_prime, c_prime]
+        for c in range(w):
+            if not contained[r, c]:
+                continue
+            #    pass
+            x, y = xs[r, c]
             # Do stuff here! 
-            p_prime = np.array([x_prime, y_prime, 1])
-            p = transform @ p_prime
-            x, y = p[0] / p[2], p[1] / p[2]
-#            import pdb; pdb.set_trace()
-            r, c = int(x), int(y) 
-            output_buffer[r_prime, c_prime] = source_image[r, c]
+            p = np.array([x, y, 1])
+            xp, yp, zp = transform @ p
+            euclidean_coord = np.array([xp, yp])
+            r_prime, c_prime = img_ops.unnormalize_coordinates(euclidean_coord, h, w)
+            r_prime, c_prime = int(r_prime), int(c_prime)
+            output_buffer[r, c] = source_image[c_prime, r_prime] 
     #################################
     ######### DO NOT MODIFY #########
     #################################
