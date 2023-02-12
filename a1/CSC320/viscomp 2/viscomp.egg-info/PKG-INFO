@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: viscomp
+Version: 0.0.0
+Summary: University of Toronto CSC320: viscomp library
+Author: Kyros Kutulakos, Esther Lin, Towaki Takikawa
+Requires-Python: >=3.8
+License-File: LICENSE.txt
