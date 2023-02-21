@@ -237,6 +237,21 @@ def multiple_line_pair_algorithm(x, ps, qs, ps_prime, qs_prime, param_a, param_b
     ################################
     ####### PUT YOUR CODE HERE #####
     ################################
+    dsum, wsum = np.zeros(2), 0
+    n_lines = ps.shape[0]
+    for i in range(n_lines):
+        pi, qi = ps[i], qs[i]
+        u, v = calculate_uv(pi, qi, x)
+        x_prime_i = calculate_x_prime(p_prime, q_prime, u, v)
+        d_i = x_prime_i - x
+        dist = norm(v)  # TODO: based on image, need to verify 
+        length = norm(qi - pi)
+        weight = ((length ** param_p) / (param_a + dist)) ** param_t
+        dsum += d_i * weight
+        wsum += weight
+    x_prime = x + (dsum / wsum)
+    return x_prime
+
     #################################
     ######### DO NOT MODIFY #########
     #################################
