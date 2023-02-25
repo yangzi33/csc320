@@ -256,6 +256,24 @@ def multiple_line_pair_algorithm(x, ps, qs, ps_prime, qs_prime, param_a, param_b
     ######### DO NOT MODIFY #########
     #################################
 
+def linear(x, delta=1):
+    """
+    Helper function for bilinear interpolation. Returns the 1D linear 
+    interpolation kernel
+
+    Args:
+        x (np.array): The source coordinates (X) of shape [2] in [-1, 1] coordinates.
+
+    Returns: 
+        float: The linear interpolation filter.
+    """
+    # TODO: delta as 1 for now, could change later?
+    l2 = norm(x)
+    if l2 >= 0 and l2 < delta:
+        return 1 - l2 / delta
+    return 0
+
+
 def interpolate_at_x(source_image, x, bilinear=False):
     """Interpolates the source_image at some location x.
     
@@ -271,12 +289,18 @@ def interpolate_at_x(source_image, x, bilinear=False):
     
     # [0, w] and [0, h] in floats
     pixel_float = img_ops.unnormalize_coordinates(x, h, w)
+    import pdb; pdb.set_trace()
     
     if bilinear:
         ################################
         ####### PUT YOUR CODE HERE #####
         ################################
-        pass
+        pixel_int = np.convolve(pixel_float, h(x[0]) * h(x[1]))
+        c, r = list(np.round(pixel_int))
+        if c >= 0 and r >= 0 and c < w and r < h:
+            return source_image[r, c]
+        else:
+            return np.zeros([4])
         #################################
         ######### DO NOT MODIFY #########
         #################################
