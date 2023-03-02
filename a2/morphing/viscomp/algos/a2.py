@@ -81,8 +81,10 @@ def perp(vec):
     ################################
     ####### PUT YOUR CODE HERE #####
     ################################
+    N = vec.shape[0]
     ret = vec.copy()
-    ret[:,0], ret[:,1] = ret[:,1], -ret[:,0]
+    for i in range(N):
+        ret[i, 0], ret[i, 1] = ret[i, 1], -ret[i, 0]
     return ret
     #################################
     ######### DO NOT MODIFY #########
@@ -103,7 +105,7 @@ def norm(vec):
     N = vec.shape[0]
     ans = np.zeros(N)
     for i in range(N):
-        ans[i] = np.linalg.norm(vec[i, :])
+        ans[i] = np.linalg.norm(vec[i])
     return ans
     #################################
     ######### DO NOT MODIFY #########
@@ -126,7 +128,9 @@ def normalize(vec):
     ################################
     # vec * (1 / l2 norm of vec)
     N = vec.shape[0]
-    return vec / norm(vec).reshape((N, 1))
+    ret = np.zeros((N, 2))
+    for i in range(N):
+        ret[i] = vec[i] / np.norm(np.arrray(vec[i]))
     #################################
     ######### DO NOT MODIFY #########
     #################################
@@ -160,8 +164,10 @@ def calculate_uv(p, q, x):
     ################################
     ####### PUT YOUR CODE HERE #####
     ################################
-    u = ((x-p).dot(q-p)) / (norm(q-p)**2)
-    v = ((x - p).dot(perp(q-p))) / (norm(q-p))
+    perp_pq = perp(np.array([q - p]))[0]
+    norm_pq = norm(np.array([q - p]))[0]
+    u = ((x-p).dot(q-p)) / (norm_pq**2)
+    v = ((x - p).dot(perp_pq)) / (norm_pq)
     return (u, v)
     #################################
     ######### DO NOT MODIFY #########
@@ -184,7 +190,9 @@ def calculate_x_prime(p_prime, q_prime, u, v):
     ################################
     ####### PUT YOUR CODE HERE #####
     ################################
-    return p_prime + u.dot(q_prime - p_prime) + (v.dot(perp(q_prime - p_prime))) / (norm(q_prime - p_prime))
+    perp_pq = perp(np.array([q_prime - p_prime]))[0]
+    norm_pq = norm(np.array([q_prime - p_prime]))[0]
+    return p_prime + u * (q_prime - p_prime) + (v * (perp_pq)) / (norm_pq) 
     #################################
     ######### DO NOT MODIFY #########
     #################################
@@ -242,12 +250,12 @@ def multiple_line_pair_algorithm(x, ps, qs, ps_prime, qs_prime, param_a, param_b
     for i in range(n_lines):
         pi, qi = ps[i], qs[i]
         u, v = calculate_uv(pi, qi, x)
-        x_prime_i = calculate_x_prime(p_prime, q_prime, u, v)
+        x_prime_i = calculate_x_prime(ps_prime[i], qs_prime[i], u, v)
         d_i = x_prime_i - x
-        dist = norm(v)  # TODO: based on image, need to verify 
-        length = norm(qi - pi)
-        weight = ((length ** param_p) / (param_a + dist)) ** param_t
-        dsum += d_i * weight
+        dist = v 
+        length = norm(np.array(qi - pi))[0]
+        weight = ((length ** param_p) / (param_a + dist)) ** param_b
+        dsum += weight * d_i
         wsum += weight
     x_prime = x + (dsum / wsum)
     return x_prime
@@ -295,7 +303,7 @@ def interpolate_at_x(source_image, x, bilinear=False):
         ################################
         ####### PUT YOUR CODE HERE #####
         ################################
-        pixel_int = np.convolve(pixel_float, h(x[0]) * h(x[1]))
+        pixel_int = np.convolve(source_image, h(x[0]) * h(x[1]))
         c, r = list(np.round(pixel_int))
         if c >= 0 and r >= 0 and c < w and r < h:
             return source_image[r, c]
@@ -376,7 +384,7 @@ def backward_mapping(source_image, destination_image, source_morph_lines, destin
             print(f"[{'#' * int(percent_done*30)}{'-' * (30-int(percent_done*30))}] {int(100*percent_done)}% done")
 
             for c in range(w):
-                x = xs[r, c][None]
+                x = xs[r, c]
 
                 if supersampling > 1:
                     ################################
@@ -390,7 +398,9 @@ def backward_mapping(source_image, destination_image, source_morph_lines, destin
                     ################################
                     ####### PUT YOUR CODE HERE #####
                     ################################
-                    pass
+                    x_prime = multiple_line_pair_algorithm(x, ps, qs, ps_prime, qs_prime, param_a, param_b, param_p)
+                    interpo = interpolate_at_x(img_ops.unnormalize_coordinates(source_image, h, w), x_prime)
+                    output_buffer[r, c] = interpo 
                     #################################
                     ######### DO NOT MODIFY #########
                     #################################
