@@ -272,7 +272,7 @@ def multiple_line_pair_algorithm(x, ps, qs, ps_prime, qs_prime, param_a, param_b
     ######### DO NOT MODIFY #########
     #################################
 
-def linear(x, delta=1):
+def h(x, delta=1):
     """
     Helper function for bilinear interpolation. Returns the 1D linear 
     interpolation kernel
@@ -307,11 +307,13 @@ def interpolate_at_x(source_image, x, bilinear=False):
     pixel_float = img_ops.unnormalize_coordinates(x, h, w)
     
     if bilinear:
+        pdb.set_trace()
         ################################
         ####### PUT YOUR CODE HERE #####
         ################################
+        print("Running Bilinear")
         pixel_int = np.convolve(pixel_float, h(x[0]) * h(x[1]))
-        c, r = list(np.round(pixel_int))
+        c, r = list(np.round(pixel_int).astype(np.int32))
         if c >= 0 and r >= 0 and c < w and r < h:
             return source_image[r, c]
         else:
@@ -406,7 +408,7 @@ def backward_mapping(source_image, destination_image, source_morph_lines, destin
                     ####### PUT YOUR CODE HERE #####
                     ################################
                     x_prime = multiple_line_pair_algorithm(x, ps, qs, ps_prime, qs_prime, param_a, param_b, param_p)
-                    interpo = interpolate_at_x(source_image, x_prime)
+                    interpo = interpolate_at_x(source_image, x_prime, bilinear)
                     output_buffer[r, c] = interpo 
                     #################################
                     ######### DO NOT MODIFY #########
