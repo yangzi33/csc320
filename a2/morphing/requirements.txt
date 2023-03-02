@@ -1,0 +1,9 @@
+numpy
+pandas
+pillow
+matplotlib
+opencv-python
+scipy
+tqdm
+kivy
+sourcedefender

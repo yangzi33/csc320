@@ -18,6 +18,7 @@ import numpy as np
 import cv2
 import viscomp.ops.image as img_ops
 import math
+import pdb
 
 def run_a2_algo(source_image, destination_image, source_morph_lines, destination_morph_lines,
                 param_a, param_b, param_p, supersampling, bilinear, interpolate, param_t, vectorize):
@@ -190,9 +191,9 @@ def calculate_x_prime(p_prime, q_prime, u, v):
     ################################
     ####### PUT YOUR CODE HERE #####
     ################################
-    perp_pq = perp(np.array([q_prime - p_prime]))[0]
-    norm_pq = norm(np.array([q_prime - p_prime]))[0]
-    return p_prime + u * (q_prime - p_prime) + (v * (perp_pq)) / (norm_pq) 
+    perp_pq_prime = perp(np.array([q_prime - p_prime]))[0]
+    norm_pq_prime = norm(np.array([q_prime - p_prime]))[0]
+    return p_prime + u * (q_prime - p_prime) + (v * (perp_pq_prime)) / (norm_pq_prime) 
     #################################
     ######### DO NOT MODIFY #########
     #################################
@@ -249,11 +250,18 @@ def multiple_line_pair_algorithm(x, ps, qs, ps_prime, qs_prime, param_a, param_b
     n_lines = ps.shape[0]
     for i in range(n_lines):
         pi, qi = ps[i], qs[i]
+        p_prime_i, q_prime_i = ps_prime[i], qs_prime[i]
         u, v = calculate_uv(pi, qi, x)
-        x_prime_i = calculate_x_prime(ps_prime[i], qs_prime[i], u, v)
+        x_prime_i = single_line_pair_algorithm(x, pi, qi, p_prime_i, q_prime_i) 
         d_i = x_prime_i - x
-        dist = v 
-        length = norm(np.array(qi - pi))[0]
+        dist = 0
+        if u > 0 and u < 1:
+            dist = abs(v)
+        elif u < 0:
+            dist = norm(np.array([x - pi]))[0]
+        else:
+            dist = norm(np.array([qi - pi]))[0]
+        length = norm(np.array([qi - pi]))[0]
         weight = ((length ** param_p) / (param_a + dist)) ** param_b
         dsum += weight * d_i
         wsum += weight
@@ -297,13 +305,12 @@ def interpolate_at_x(source_image, x, bilinear=False):
     
     # [0, w] and [0, h] in floats
     pixel_float = img_ops.unnormalize_coordinates(x, h, w)
-    import pdb; pdb.set_trace()
     
     if bilinear:
         ################################
         ####### PUT YOUR CODE HERE #####
         ################################
-        pixel_int = np.convolve(source_image, h(x[0]) * h(x[1]))
+        pixel_int = np.convolve(pixel_float, h(x[0]) * h(x[1]))
         c, r = list(np.round(pixel_int))
         if c >= 0 and r >= 0 and c < w and r < h:
             return source_image[r, c]
@@ -399,7 +406,7 @@ def backward_mapping(source_image, destination_image, source_morph_lines, destin
                     ####### PUT YOUR CODE HERE #####
                     ################################
                     x_prime = multiple_line_pair_algorithm(x, ps, qs, ps_prime, qs_prime, param_a, param_b, param_p)
-                    interpo = interpolate_at_x(img_ops.unnormalize_coordinates(source_image, h, w), x_prime)
+                    interpo = interpolate_at_x(source_image, x_prime)
                     output_buffer[r, c] = interpo 
                     #################################
                     ######### DO NOT MODIFY #########

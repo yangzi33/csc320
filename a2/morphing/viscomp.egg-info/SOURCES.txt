@@ -1,0 +1,16 @@
+LICENSE.txt
+README.md
+setup.py
+viscomp/__init__.py
+viscomp/config_parser.py
+viscomp.egg-info/PKG-INFO
+viscomp.egg-info/SOURCES.txt
+viscomp.egg-info/dependency_links.txt
+viscomp.egg-info/top_level.txt
+viscomp.egg-info/zip-safe
+viscomp/algos/__init__.py
+viscomp/algos/a2.py
+viscomp/binaries/__init__.py
+viscomp/ops/__init__.py
+viscomp/ops/csv.py
+viscomp/ops/image.py
