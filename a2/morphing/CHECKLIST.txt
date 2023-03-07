@@ -2,8 +2,8 @@
 Assignment 2 Checklist/Grading sheet
 -------------------------------------
 
-Name: 
-Student ID:
+Name: ZIYUE YANG
+Student ID: 1004804759
 
 ------------------------------------------------------------------------------
 A. PLEASE ANSWER THE FOLLOWING QUESTIONS (YOUR ASSIGNMENT WILL NOT BE MARKED
@@ -13,14 +13,14 @@ A. PLEASE ANSWER THE FOLLOWING QUESTIONS (YOUR ASSIGNMENT WILL NOT BE MARKED
 1. I verify that my submission adheres to the Academic Honesty policy 
    stated in the A2 handout.
 
-   ___Yes   ___No
+   _X_Yes   ___No
 
 2. I copied, modified, re-wrote, or re-purposed source code that was not 
    originally written by me (in Python, Java, C++ or any other programming 
    language). See the A2 handout for policy regarding uses of such 
    pre-existing code
 
-   ___Yes   ___No
+   ___Yes   _X_No
       
    If you checked yes, please supply the following
    
@@ -35,7 +35,7 @@ A. PLEASE ANSWER THE FOLLOWING QUESTIONS (YOUR ASSIGNMENT WILL NOT BE MARKED
 3. I collaborated on this assignment with another student 
    See the A2 handout for policy on assignments done in collaboration
 
-   ___Yes   ___No
+   ___Yes   _X_No
 
    If you checked yes, please supply the following
 
@@ -55,17 +55,17 @@ B. PLACE AN (X) IN FRONT OF PORTIONS OF THE ASSIGNMENT THAT YOU COMPLETED IN
    YOUR PARTIAL IMPLEMENTATION, DETAILED COMMENTS IN YOUR CODE, ETC) THE MORE 
    LIKELY IT IS WE WILL BE ABLE TO MAKE AN ACCURATE ASSESSMENT
 
-___   ( 50 marks) Part A.1    
-							  ___ (10 marks) backward_mapping 
-							  ___ ( 5 marks) calculate_uv
-							  ___ ( 5 marks) calculate_x_prime
-							  ___ (10 marks) single_line_pair_algorithm 
-							  ___ (20 marks) multiple_line_pair_algorithm 
+_X_   ( 50 marks) Part A.1    
+							  _X_ (10 marks) backward_mapping 
+							  _X_ ( 5 marks) calculate_uv
+							  _X_ ( 5 marks) calculate_x_prime
+							  _X_ (10 marks) single_line_pair_algorithm 
+							  _X_ (20 marks) multiple_line_pair_algorithm 
 							  
 
 ___   ( 15 marks) Part A.2	  Super-Sampling
 
-___   ( 15 marks) Part A.2	  Bilinear Interpolation
+_X_   ( 15 marks) Part A.2	  Bilinear Interpolation
 
 ___   ( 15 marks) Part B      Experimentation
 
